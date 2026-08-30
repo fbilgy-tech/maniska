@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+    <title>Untuk Putri</title>
+    <link rel="icon" type="image/x-icon" href="https://malasid.github.io/favicon.png">
+    <meta name="description" content="Kado Spesial buat Putri" />
+
+    <!-- Google Fonts Preconnect and Prefetch -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Plus+Jakarta+Sans:wght@700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- FontAwesome Library (Public CDN) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <!-- SweetAlert 2 Library -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+
+    <!-- Custom Local Stylesheet -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+    <!-- Sparkle Trail Container -->
+    <div id="sparkle-container"></div>
+
+    <!-- Background Animated Blobs -->
+    <div class="bg-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Music Track Source -->
+    <audio src="https://feeldreams.github.io/angelbabypart2.mp3" id="linkmp3"></audio>
+
+    <!-- Floating Audio Control Button (Interactive Equalizer Visualizer) -->
+    <button class="audio-toggle" title="Play/Pause Musik" aria-label="Play/Pause Musik">
+        <div class="equalizer">
+            <span class="bar bar-1"></span>
+            <span class="bar bar-2"></span>
+            <span class="bar bar-3"></span>
+            <span class="bar bar-4"></span>
+        </div>
+        <i class="fa-solid fa-music"></i>
+    </button>
+
+    <!-- Main Interactive Card -->
+    <div id="Content">
+        <!-- 1. Welcome Screen (Entry) -->
+        <div class="welcome-screen">
+            <div class="stiker-wrapper">
+                <img src="https://feeldreams.github.io/pandaputih.gif" id="ftoAwal" alt="Panda Putih Lucu" />
+            </div>
+            <div class="love-btn-container">
+                <button class="lovein" aria-label="Mulai Kejutan">
+                    <span class="ripple-ring ring-1"></span>
+                    <span class="ripple-ring ring-2"></span>
+                    <span class="ripple-ring ring-3"></span>
+                    <i class="fa-solid fa-heart"></i>
+                </button>
+            </div>
+            <p class="instruction-text">Sentuh LOVEnya!</p>
+        </div>
+
+        <!-- 2. Slides Screen (Slideshow is injected here dynamically via script.js) -->
+        <div class="slides-container"></div>
+        <p id="ketgeser" class="hint-text"></p>
+
+        <!-- 3. Final Message Screen (Typewriter layout) -->
+        <blockquote id="bq">
+            <p id="kalimat"></p>
+            <p id="pesanAkhir"></p>
+        </blockquote>
+    </div>
+
+    <!-- Hidden Assets Source Container (Kept for compatibility and local script parsing) -->
+    <div style="display: none;">
+        <!-- Sticker Images Collection -->
+        <div class="kumpulanstiker">
+            <img src="https://feeldreams.github.io/bunga.gif" id="fotostiker" alt="Bunga" />
+            <img src="https://feeldreams.github.io/emawh.gif" id="fotostiker1" alt="Emawh" />
+            <img src="https://feeldreams.github.io/pandakuning.gif" id="fotostiker2" alt="Panda Kuning" />
+            <img src="https://feeldreams.github.io/pusn.gif" id="fotostiker3" alt="Pusn" />
+            <img src="https://feeldreams.github.io/gumush.gif" id="fotostikerA" alt="Gumush" />
+        </div>
+
+        <!-- Slide Texts Source -->
+        <div id="pergeseran">
+            <p><span>Hi Putri,<br>ada yang mau aku sampein.</span></p>
+            <p><span>Dulu kita sempet kenalan bentar,</span></p>
+            <p><span>terus hilang gitu aja tanpa kabar.</span></p>
+            <p><span>Tapi sekarang kita bisa ngobrol lagi, dan jujur... itu seru.</span></p>
+            <p><span>Aku harap kali ini kita bisa lebih deket.</span></p>
+            <p><span>Mencari bug di dalam codingan,<br>kelupaan titik koma bikin pusing kepala.<br>Kalau database butuh hubungan,<br>boleh gak aku jadi primary key-nya? 💻❤️</span></p>
+            <p><span>Oh iya, satu hal lagi...</span></p>
+        </div>
+    </div>
+
+    <!-- Custom Local Script -->
+    <script src="script.js"></script>
+</body>
+
+</html>
