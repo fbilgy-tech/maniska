@@ -1,412 +1,313 @@
-// script.js - Interactive Romance Web Application
+/**
+ * script.js - Clean, Modern Editorial Romance Engine
+ * Curated for Maniska
+ */
 
-// State variables
-let currentSlide = 0;
-const slides = [];
-let audio = null;
-let isPlaying = false;
-let typingInterval = null;
+// Application State
+const appState = {
+    currentSlide: 0,
+    totalSlides: 0,
+    isPlaying: false,
+    dodgeCount: 0
+};
 
-// Select elements
-let body;
-let contentCard;
-let welcomeScreen;
-let slidesContainer;
-let loveBtn;
-let bq;
-let kalimatElement;
-let pesanAkhirElement;
-let audioToggle;
-let audioIcon;
-let audioSrc;
+// Data Structures
+let slidesData = [];
+let audioEl = null;
 
-// Texts
-const teksAkhir = "Makasih ya Putri, udah mau ngobrol lagi.\nSenang rasanya bisa komunikasi lagi sama kamu.\nAda satu hal lagi yang mau aku bilang...";
-const teksAkhirB = "Nanti pas aku cuti, kita main bareng ya? 😊";
+// DOM Cache
+let el = {};
 
-let stickers = [];
-
-// Initialize application
+// ========================================================
+// 1. INITIALIZATION & CACHE
+// ========================================================
 document.addEventListener("DOMContentLoaded", () => {
-    // Resolve DOM elements
-    body = document.querySelector("body");
-    contentCard = document.getElementById("Content");
-    welcomeScreen = document.querySelector(".welcome-screen");
-    slidesContainer = document.querySelector(".slides-container");
-    loveBtn = document.querySelector(".lovein");
-    bq = document.getElementById("bq");
-    kalimatElement = document.getElementById("kalimat");
-    pesanAkhirElement = document.getElementById("pesanAkhir");
-    audioToggle = document.querySelector(".audio-toggle");
-    audioIcon = document.querySelector(".audio-toggle i");
-    audioSrc = document.getElementById("linkmp3").src;
-
-    // Resolve stickers
-    stickers = [
-        document.getElementById("fotostiker"),  // bunga
-        document.getElementById("fotostiker1"), // emawh
-        document.getElementById("fotostiker2"), // pandakuning
-        document.getElementById("fotostiker3"), // pusn
-        document.getElementById("fotostikerA"), // gumush
-        document.getElementById("fotostiker2"), // pandakuning (for IT pantun)
-        document.getElementById("fotostiker")   // bunga (for final slide)
-    ];
-
-    // Initialize Audio
-    audio = new Audio(audioSrc);
-    audio.loop = true;
-
-    // Load slides from the HTML markup
-    const slideElements = document.querySelectorAll("#pergeseran p");
-    slideElements.forEach((el, index) => {
-        slides.push({
-            text: el.querySelector("span").innerHTML,
-            sticker: stickers[index] || stickers[0]
-        });
-    });
-
-    // Set welcome screen opacity & entry animations
-    welcomeScreen.style.display = "flex";
-    slidesContainer.style.display = "none";
-    bq.style.display = "none";
-
-    // Setup Event Listeners
-    loveBtn.addEventListener("click", startExperience);
-    audioToggle.addEventListener("click", toggleAudio);
-
-    
-    // Clicking the container progresses slides when active
-    contentCard.addEventListener("click", (e) => {
-        // Don't trigger slide click if interactive buttons or audio toggle were clicked
-        if (e.target.closest('.interactive-container') || e.target.closest('.audio-toggle') || e.target.closest('.lovein') || e.target.closest('.swal2-popup')) {
-            return;
-        }
-        if (slidesContainer.style.display === "flex") {
-            nextSlide();
-        }
-    });
+    cacheDom();
+    initAudio();
+    initSlides();
+    bindEvents();
 });
 
-// Start the experience
-function startExperience() {
-    // Play music
-    playAudio();
-
-    // Sparkle explosion at button position
-    const btnRect = loveBtn.getBoundingClientRect();
-    const btnX = btnRect.left + btnRect.width / 2;
-    const btnY = btnRect.top + btnRect.height / 2;
-    for (let i = 0; i < 30; i++) {
-        createSparkle(btnX + (Math.random() - 0.5) * 60, btnY + (Math.random() - 0.5) * 60);
-    }
-
-    // Transition Welcome Screen -> Slides
-    welcomeScreen.style.opacity = "0";
-    setTimeout(() => {
-        welcomeScreen.style.display = "none";
-        slidesContainer.style.display = "flex";
-        showSlide(0);
-        
-        // Start falling hearts
-        setInterval(createHeart, 300);
-    }, 400);
+function cacheDom() {
+    el = {
+        body: document.body,
+        contentCard: document.getElementById("Content"),
+        welcomeScreen: document.querySelector(".welcome-screen"),
+        slidesWrapper: document.querySelector(".slides-wrapper"),
+        slidesContainer: document.querySelector(".slides-container"),
+        progressFill: document.getElementById("progress-fill"),
+        stepBadge: document.getElementById("step-badge"),
+        prevBtn: document.getElementById("prev-slide-btn"),
+        nextBtn: document.getElementById("next-slide-btn"),
+        hintGeser: document.getElementById("ketgeser"),
+        bq: document.getElementById("bq"),
+        kalimat: document.getElementById("kalimat"),
+        pesanAkhir: document.getElementById("pesanAkhir"),
+        btnStart: document.getElementById("btn-start"),
+        btnYes: document.getElementById("btn-yes"),
+        btnNo: document.getElementById("btn-no"),
+        choiceContainer: document.getElementById("choice-container"),
+        audioToggleBtn: document.getElementById("audio-toggle-btn"),
+        ticketModal: document.getElementById("ticket-modal"),
+        closeTicketBtn: document.getElementById("close-ticket-btn"),
+        btnCloseTicket: document.getElementById("btn-close-ticket"),
+        btnShareWa: document.getElementById("btn-share-wa")
+    };
 }
 
-// Audio management
-function playAudio() {
-    audio.play().then(() => {
-        isPlaying = true;
-        audioToggle.classList.add("playing");
-    }).catch(err => {
-        console.log("Audio play blocked by browser.");
+// ========================================================
+// 2. AUDIO MANAGEMENT (1.mp3 Local Engine)
+// ========================================================
+function initAudio() {
+    audioEl = document.getElementById("linkmp3");
+    if (!audioEl) return;
+
+    audioEl.addEventListener("play", () => {
+        appState.isPlaying = true;
+        if (el.audioToggleBtn) el.audioToggleBtn.classList.add("playing");
+        const statusText = document.querySelector(".music-status");
+        if (statusText) statusText.innerText = "Sedang diputar";
     });
+
+    audioEl.addEventListener("pause", () => {
+        appState.isPlaying = false;
+        if (el.audioToggleBtn) el.audioToggleBtn.classList.remove("playing");
+        const statusText = document.querySelector(".music-status");
+        if (statusText) statusText.innerText = "Klik untuk memutar";
+    });
+}
+
+function playTrack() {
+    if (audioEl) {
+        audioEl.play().catch(() => {
+            console.log("Audio playback prevented by browser autoplay policy.");
+        });
+    }
+}
+
+function pauseTrack() {
+    if (audioEl) {
+        audioEl.pause();
+    }
 }
 
 function toggleAudio() {
-    if (isPlaying) {
-        audio.pause();
-        isPlaying = false;
-        audioToggle.classList.remove("playing");
+    if (appState.isPlaying) {
+        pauseTrack();
     } else {
-        playAudio();
+        playTrack();
     }
 }
 
-// Slide Management
-function showSlide(index) {
-    if (index >= slides.length) {
-        // Reached the end of slides, proceed to typewriter final message
-        startFinalSequence();
-        return;
+// ========================================================
+// 3. SLIDES STORY ENGINE
+// ========================================================
+function initSlides() {
+    const rawNodes = document.querySelectorAll("#pergeseran > div");
+    slidesData = [];
+
+    rawNodes.forEach((node) => {
+        const stickerId = node.getAttribute("data-sticker") || "fotostiker";
+        const stickerEl = document.getElementById(stickerId) || document.getElementById("fotostiker");
+        const heading = node.querySelector(".slide-heading") ? node.querySelector(".slide-heading").innerHTML : "";
+        const body = node.querySelector(".slide-body") ? node.querySelector(".slide-body").innerHTML : "";
+
+        slidesData.push({
+            stickerSrc: stickerEl ? stickerEl.src : "https://feeldreams.github.io/bunga.gif",
+            heading: heading,
+            body: body
+        });
+    });
+
+    appState.totalSlides = slidesData.length;
+}
+
+function updateProgress(index) {
+    const progress = ((index + 1) / appState.totalSlides) * 100;
+    if (el.progressFill) el.progressFill.style.width = `${progress}%`;
+    if (el.stepBadge) el.stepBadge.innerText = `0${index + 1} / 0${appState.totalSlides}`;
+
+    if (el.prevBtn) el.prevBtn.disabled = index === 0;
+    if (el.nextBtn) {
+        el.nextBtn.innerHTML = index === appState.totalSlides - 1
+            ? '<i class="fa-solid fa-envelope-open-text"></i>'
+            : '<i class="fa-solid fa-chevron-right"></i>';
     }
 
-    currentSlide = index;
+    if (el.hintGeser) {
+        el.hintGeser.innerHTML = index === appState.totalSlides - 1
+            ? '<span>Baca Pesan Terakhir</span> <i class="fa-solid fa-arrow-right"></i>'
+            : '<span>Lanjut</span> <i class="fa-solid fa-chevron-right"></i>';
+    }
+}
 
-    // Clear previous slide view
-    slidesContainer.innerHTML = "";
+function renderSlide(index) {
+    if (index < 0 || index >= appState.totalSlides) return;
+    appState.currentSlide = index;
+    updateProgress(index);
 
-    // Create current slide elements dynamically for perfect transition
-    const slideDiv = document.createElement("div");
-    slideDiv.className = "slide active";
+    const data = slidesData[index];
+    el.slidesContainer.innerHTML = "";
 
-    const stickerImg = document.createElement("img");
-    stickerImg.src = slides[index].sticker.src;
-    stickerImg.className = "slide-stiker";
-    
-    const textP = document.createElement("p");
-    textP.className = "pantun-text";
-    textP.innerHTML = slides[index].text;
+    const slideWrap = document.createElement("div");
+    slideWrap.className = "slide-item-wrap";
 
-    slideDiv.appendChild(stickerImg);
-    slideDiv.appendChild(textP);
-    slidesContainer.appendChild(slideDiv);
+    slideWrap.innerHTML = `
+        <img src="${data.stickerSrc}" class="slide-sticker-media" alt="Illustration" />
+        <h3 class="slide-heading">${data.heading}</h3>
+        ${data.body ? `<p class="slide-body">${data.body}</p>` : ''}
+    `;
 
-    // Dynamic scale/fade entry
-    slideDiv.style.opacity = "0";
-    slideDiv.style.transform = "scale(0.9) translateY(10px)";
+    el.slidesContainer.appendChild(slideWrap);
+
+    slideWrap.style.opacity = "0";
+    slideWrap.style.transform = "translateY(8px)";
     setTimeout(() => {
-        slideDiv.style.opacity = "1";
-        slideDiv.style.transform = "scale(1) translateY(0)";
-    }, 50);
-
-    // Show slide count or progress indicator silently in hint text
-    const hint = document.getElementById("ketgeser");
-    if (index === slides.length - 1) {
-        hint.innerHTML = "Klik terakhir kali! <i class='fa-solid fa-arrow-right'></i>";
-    } else {
-        hint.innerHTML = "Klik untuk Geser! <i class='fa-solid fa-arrow-right'></i>";
-    }
+        slideWrap.style.opacity = "1";
+        slideWrap.style.transform = "translateY(0)";
+    }, 30);
 }
 
 function nextSlide() {
-    showSlide(currentSlide + 1);
+    if (appState.currentSlide < appState.totalSlides - 1) {
+        renderSlide(appState.currentSlide + 1);
+    } else {
+        startFinalSequence();
+    }
 }
 
-// Typewriter and Final Screen
-function startFinalSequence() {
-    // Hide slide UI components
-    slidesContainer.style.display = "none";
-    document.getElementById("ketgeser").style.display = "none";
-    
-    // Show final sequence card elements
-    bq.style.display = "block";
-    
-    // Add active class or reset text
-    kalimatElement.innerHTML = "";
-    pesanAkhirElement.classList.remove("show");
-    
-    // Start typewriter effect
-    let charIndex = 0;
-    const formattedText = teksAkhir.replace(/\r\n/g, "\n").replace(/\r/g, "\n").replace(/<br>/g, "\n");
-    
-    typingInterval = setInterval(() => {
-        if (charIndex < formattedText.length) {
-            const char = formattedText.charAt(charIndex);
-            if (char === "\n") {
-                kalimatElement.innerHTML += "<br>";
-            } else {
-                kalimatElement.innerHTML += char;
-            }
-            charIndex++;
-        } else {
-            clearInterval(typingInterval);
-            finishFinalSequence();
-        }
-    }, 45);
+function prevSlide() {
+    if (appState.currentSlide > 0) {
+        renderSlide(appState.currentSlide - 1);
+    }
 }
 
-function finishFinalSequence() {
-    // Show subtitle after delay
+// ========================================================
+// 4. TRANSITIONS & FINAL INVITATION
+// ========================================================
+function startExperience() {
+    playTrack();
+
+    el.welcomeScreen.style.opacity = "0";
+    el.welcomeScreen.style.transform = "translateY(-6px)";
+
     setTimeout(() => {
-        pesanAkhirElement.innerHTML = teksAkhirB;
-        pesanAkhirElement.classList.add("show");
-        
-        // Show interactive question buttons
-        showInteractiveQuestion();
-    }, 1000);
+        el.welcomeScreen.style.display = "none";
+        el.slidesWrapper.style.display = "flex";
+        renderSlide(0);
+    }, 280);
 }
 
-function showInteractiveQuestion() {
-    // Prevent duplicated buttons if already present
-    if (document.querySelector(".interactive-container")) return;
+const finalSweetNote = `Terima kasih banyak ya Maniska sudah meluangkan waktu membaca catatan kecil ini sampai selesai.\n\nAku sangat senang bisa saling kenal dan bertukar kabar sama kamu.`;
+const finalQuestionText = "Kalau nanti waktu cutiku sudah tiba, boleh ya kita jalan dan ngobrol santai bareng? 😊";
 
-    const container = document.createElement("div");
-    container.className = "interactive-container";
+function startFinalSequence() {
+    el.slidesWrapper.style.opacity = "0";
 
-    const yesBtn = document.createElement("button");
-    yesBtn.className = "btn-choice btn-yes";
-    yesBtn.innerText = "Mau dong ❤️";
+    setTimeout(() => {
+        el.slidesWrapper.style.display = "none";
+        el.bq.style.display = "flex";
+        el.bq.style.opacity = "1";
 
-    const noBtn = document.createElement("button");
-    noBtn.className = "btn-choice btn-no";
-    noBtn.innerText = "Tutup";
-
-    container.appendChild(yesBtn);
-    container.appendChild(noBtn);
-    bq.appendChild(container);
-
-    // Event listener for "Yes"
-    yesBtn.addEventListener("click", handleYesAnswer);
-
-    // Event listener for dodging "No"
-    // Mouseenter handles desktop hover, touchstart handles mobile tap attempts
-    noBtn.addEventListener("mouseenter", () => dodgeButton(noBtn));
-    noBtn.addEventListener("touchstart", (e) => {
-        e.preventDefault();
-        dodgeButton(noBtn);
-    });
+        typewriterLoveMessage();
+    }, 280);
 }
 
-// Make the "No" button jump to a random location inside the card bounding box
-function dodgeButton(btn) {
-    const cardRect = contentCard.getBoundingClientRect();
+function typewriterLoveMessage() {
+    el.kalimat.innerHTML = "";
+    el.pesanAkhir.classList.remove("show");
+
+    let charIdx = 0;
+    const formatted = finalSweetNote.replace(/\r\n/g, "\n");
+
+    const timer = setInterval(() => {
+        if (charIdx < formatted.length) {
+            const char = formatted.charAt(charIdx);
+            if (char === "\n") {
+                el.kalimat.innerHTML += "<br>";
+            } else {
+                el.kalimat.innerHTML += char;
+            }
+            charIdx++;
+        } else {
+            clearInterval(timer);
+            setTimeout(() => {
+                el.pesanAkhir.innerText = finalQuestionText;
+                el.pesanAkhir.classList.add("show");
+            }, 350);
+        }
+    }, 25);
+}
+
+// ========================================================
+// 5. POLITE & SUBTLE BUTTON INTERACTION
+// ========================================================
+const dodgeMessages = [
+    "Dipikir-pikir lagi ya...",
+    "Beneran gak mau nih? 🙂",
+    "Pencet yang sebelah kiri aja ya",
+    "Yuk jalan bareng nanti",
+    "Tombol ini pemalu..."
+];
+
+function dodgeButton(e) {
+    if (e) e.preventDefault();
+    appState.dodgeCount++;
+
+    const btn = el.btnNo;
+    const card = el.contentCard;
+    if (!btn || !card) return;
+
+    const cardRect = card.getBoundingClientRect();
     const btnRect = btn.getBoundingClientRect();
 
-    // Padding to prevent escaping the boundaries
-    const padding = 15;
-    
-    // Calculate max bounds relative to the button's offset parent container
-    const parentContainer = btn.parentElement;
-    const parentRect = parentContainer.getBoundingClientRect();
+    const maxX = (cardRect.width - btnRect.width) * 0.45;
+    const randomX = (Math.random() - 0.5) * maxX * 1.6;
+    const randomY = (Math.random() - 0.5) * 80;
 
-    // Generate random coordinate position relative to parent container
-    const maxLeft = parentRect.width - btnRect.width - padding;
-    const maxTop = 150; // Allow moving up or down within visual range
-    const minTop = -100;
+    btn.style.position = "relative";
+    btn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+    btn.style.transition = "all 0.22s ease";
 
-    const newLeft = Math.floor(Math.random() * maxLeft);
-    const newTop = Math.floor(Math.random() * (maxTop - minTop)) + minTop;
-
-    // Apply styles to break flow and reposition
-    btn.style.position = "absolute";
-    btn.style.left = `${newLeft}px`;
-    btn.style.top = `${newTop}px`;
-    btn.style.transition = "all 0.15s ease-out";
+    btn.innerText = dodgeMessages[appState.dodgeCount % dodgeMessages.length];
 }
 
-function handleYesAnswer() {
-    // Sparkle explosion!
-    for (let i = 0; i < 25; i++) {
-        setTimeout(() => {
-            const x = window.innerWidth / 2 + (Math.random() - 0.5) * 250;
-            const y = window.innerHeight / 2 + (Math.random() - 0.5) * 250;
-            createSparkle(x, y);
-        }, i * 20);
+function handleYes() {
+    if (el.ticketModal) {
+        el.ticketModal.style.display = "flex";
+    }
+}
+
+function shareViaWhatsApp() {
+    const text = encodeURIComponent("Hai! Aku sudah baca catatannya. Boleh, nanti pas kamu cuti kita jalan dan ngobrol santai bareng ya! 😊");
+    window.open(`https://wa.me/6283123826063?text=${text}`, "_blank");
+}
+
+// ========================================================
+// 6. EVENT BINDINGS
+// ========================================================
+function bindEvents() {
+    if (el.btnStart) el.btnStart.addEventListener("click", startExperience);
+    if (el.prevBtn) el.prevBtn.addEventListener("click", prevSlide);
+    if (el.nextBtn) el.nextBtn.addEventListener("click", nextSlide);
+    if (el.hintGeser) el.hintGeser.addEventListener("click", nextSlide);
+    if (el.audioToggleBtn) el.audioToggleBtn.addEventListener("click", toggleAudio);
+
+    if (el.btnYes) el.btnYes.addEventListener("click", handleYes);
+    if (el.btnNo) {
+        el.btnNo.addEventListener("mouseenter", dodgeButton);
+        el.btnNo.addEventListener("touchstart", dodgeButton);
+        el.btnNo.addEventListener("click", dodgeButton);
     }
 
-    // Show SweetAlert celebration popup (non-alay romantic version using "aku")
-    Swal.fire({
-        title: 'Yeay! 😊',
-        text: 'Aku senang dengarnya. Makasih banyak ya, Putri. Semoga ke depannya obrolan kita makin seru. ✨',
-        imageUrl: stickers[4].src,
-        imageWidth: 100,
-        imageHeight: 100,
-        imageAlt: 'Gumush Cute Sticker',
-        confirmButtonText: 'Oke, deal! 👍',
-        backdrop: `rgba(255, 101, 132, 0.2)`
-    }).then(() => {
-        // Trigger extra continuous hearts shower and sparkle burst
-        for (let i = 0; i < 50; i++) {
-            setTimeout(createHeart, i * 60);
-            setTimeout(() => {
-                const x = Math.random() * window.innerWidth;
-                const y = Math.random() * window.innerHeight;
-                createSparkle(x, y);
-            }, i * 60);
+    if (el.closeTicketBtn) el.closeTicketBtn.addEventListener("click", () => el.ticketModal.style.display = "none");
+    if (el.btnCloseTicket) el.btnCloseTicket.addEventListener("click", () => el.ticketModal.style.display = "none");
+    if (el.btnShareWa) el.btnShareWa.addEventListener("click", shareViaWhatsApp);
+
+    document.addEventListener("keydown", (e) => {
+        if (el.slidesWrapper && el.slidesWrapper.style.display === "flex") {
+            if (e.key === "ArrowRight" || e.key === " ") nextSlide();
+            else if (e.key === "ArrowLeft") prevSlide();
         }
     });
 }
-
-// Particle heart rain generator (FontAwesome)
-function createHeart() {
-    const heart = document.createElement("div");
-    heart.className = "fa-solid fa-heart";
-    
-    // Random position and scaling
-    const startX = Math.random() * 100;
-    const size = Math.random() * 1.2 + 0.6; // Scale multiplier (0.6x to 1.8x)
-    const duration = Math.random() * 2.5 + 2.5; // 2.5s to 5s
-    const opacity = Math.random() * 0.6 + 0.4;
-
-    heart.style.left = `${startX}vw`;
-    heart.style.transform = `scale(${size})`;
-    heart.style.opacity = `${opacity}`;
-    heart.style.animationDuration = `${duration}s`;
-    
-    // Variations of pink and red shades
-    const colors = ["#ff4a76", "#ff7597", "#ff2e63", "#ff5c8a", "#ff007f", "#d90429"];
-    heart.style.color = colors[Math.floor(Math.random() * colors.length)];
-
-    body.appendChild(heart);
-
-    setTimeout(() => {
-        heart.remove();
-    }, duration * 1000);
-}
-
-// Sparkle Trail Generator
-function createSparkle(x, y) {
-    if (document.querySelectorAll('.sparkle').length > 30) return;
-
-    const sparkle = document.createElement("div");
-    sparkle.className = "sparkle";
-    
-    // Mix of elegant symbols
-    const symbols = ["✦", "♥", "★", "✧", "•"];
-    sparkle.innerText = symbols[Math.floor(Math.random() * symbols.length)];
-    
-    sparkle.style.left = `${x}px`;
-    sparkle.style.top = `${y}px`;
-    
-    const dx = (Math.random() - 0.5) * 80;
-    const dy = (Math.random() - 0.5) * 80 - 20; // Float slightly upwards
-    const scale = Math.random() * 0.6 + 0.4;
-    const rot = Math.random() * 360;
-    
-    sparkle.style.setProperty('--dx', `${dx}px`);
-    sparkle.style.setProperty('--dy', `${dy}px`);
-    sparkle.style.setProperty('--scale', scale);
-    sparkle.style.setProperty('--rot', `${rot}deg`);
-    
-    const colors = ["#e56b6f", "#ea8c8f", "#b56576", "#ffb7b2", "#ffdac1", "#ffffff"];
-    sparkle.style.color = colors[Math.floor(Math.random() * colors.length)];
-    
-    const container = document.getElementById("sparkle-container");
-    if (container) {
-        container.appendChild(sparkle);
-    }
-    
-    setTimeout(() => {
-        sparkle.remove();
-    }, 1000);
-}
-
-// Bind Sparkle Trail Listeners
-let lastMove = 0;
-document.addEventListener("mousemove", (e) => {
-    const now = Date.now();
-    if (now - lastMove < 30) return; // Throttle trail to keep it smooth
-    lastMove = now;
-    createSparkle(e.clientX, e.clientY);
-});
-
-document.addEventListener("touchmove", (e) => {
-    const now = Date.now();
-    if (now - lastMove < 30) return;
-    lastMove = now;
-    if (e.touches && e.touches[0]) {
-        createSparkle(e.touches[0].clientX, e.touches[0].clientY);
-    }
-});
-
-// Sparkle Burst on general clicks
-document.addEventListener("click", (e) => {
-    // Avoid triggering multiple sparkle bubbles on specific interactive elements to keep clean
-    if (e.target.closest('.lovein') || e.target.closest('.btn-choice')) return;
-    
-    for (let i = 0; i < 8; i++) {
-        setTimeout(() => {
-            createSparkle(e.clientX + (Math.random() - 0.5) * 30, e.clientY + (Math.random() - 0.5) * 30);
-        }, i * 20);
-    }
-});

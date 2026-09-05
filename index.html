@@ -6,84 +6,170 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <title>Untuk Putri</title>
+    <title>A Note for Maniska</title>
     <link rel="icon" type="image/x-icon" href="https://malasid.github.io/favicon.png">
-    <meta name="description" content="Kado Spesial buat Putri" />
+    <meta name="description" content="A curated personal story for Maniska" />
 
-    <!-- Google Fonts Preconnect and Prefetch -->
+    <!-- Modern Typography: Editorial Serif & Clean Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:ital,wght@0,600;0,800;1,600&family=Plus+Jakarta+Sans:wght@700;800&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
         rel="stylesheet">
 
-    <!-- FontAwesome Library (Public CDN) -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <!-- FontAwesome 6 CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
 
-    <!-- SweetAlert 2 Library -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
-
-    <!-- Custom Local Stylesheet -->
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
-    <!-- Sparkle Trail Container -->
-    <div id="sparkle-container"></div>
-
-    <!-- Background Animated Blobs -->
-    <div class="bg-blobs">
-        <div class="blob blob-1"></div>
-        <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
+    <!-- Subtle Ambient Lighting Mesh -->
+    <div class="ambient-layer">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="subtle-grid"></div>
     </div>
 
-    <!-- Music Track Source -->
-    <audio src="https://feeldreams.github.io/angelbabypart2.mp3" id="linkmp3"></audio>
-
-    <!-- Floating Audio Control Button (Interactive Equalizer Visualizer) -->
-    <button class="audio-toggle" title="Play/Pause Musik" aria-label="Play/Pause Musik">
-        <div class="equalizer">
-            <span class="bar bar-1"></span>
-            <span class="bar bar-2"></span>
-            <span class="bar bar-3"></span>
-            <span class="bar bar-4"></span>
-        </div>
-        <i class="fa-solid fa-music"></i>
-    </button>
-
-    <!-- Main Interactive Card -->
-    <div id="Content">
-        <!-- 1. Welcome Screen (Entry) -->
-        <div class="welcome-screen">
-            <div class="stiker-wrapper">
-                <img src="https://feeldreams.github.io/pandaputih.gif" id="ftoAwal" alt="Panda Putih Lucu" />
+    <!-- Floating Minimalist Audio Bar -->
+    <header class="top-nav">
+        <div class="audio-capsule">
+            <audio id="linkmp3" loop preload="auto" src="1.mp3">
+                <source src="1.mp3" type="audio/mpeg">
+                <source src="hivi.mp3" type="audio/mpeg">
+                <source src="lagu.mp3" type="audio/mpeg">
+            </audio>
+            <button class="audio-btn" id="audio-toggle-btn" title="Play / Pause Musik" aria-label="Audio Play Pause">
+                <div class="sound-wave">
+                    <span class="bar b1"></span>
+                    <span class="bar b2"></span>
+                    <span class="bar b3"></span>
+                    <span class="bar b4"></span>
+                </div>
+                <i class="fa-solid fa-play play-icon"></i>
+            </button>
+            <div class="song-meta">
+                <span class="song-title">Siapkah Kau 'Tuk Jatuh Cinta Lagi</span>
+                <span class="music-status">Klik untuk memutar</span>
             </div>
-            <div class="love-btn-container">
-                <button class="lovein" aria-label="Mulai Kejutan">
-                    <span class="ripple-ring ring-1"></span>
-                    <span class="ripple-ring ring-2"></span>
-                    <span class="ripple-ring ring-3"></span>
-                    <i class="fa-solid fa-heart"></i>
+        </div>
+    </header>
+
+    <!-- Main Aesthetic Card Stage -->
+    <main id="AppContainer">
+        <article id="Content" class="glass-stage">
+            
+            <!-- Delicate Top Card Header -->
+            <div class="stage-header">
+                <span class="header-tag">Private Note</span>
+                <span class="header-recipient">For Maniska</span>
+            </div>
+
+            <!-- 1. Welcome Screen -->
+            <section class="welcome-screen">
+                <div class="sticker-frame">
+                    <img src="https://feeldreams.github.io/pandaputih.gif" id="ftoAwal" class="hero-sticker" alt="Panda Animation" />
+                </div>
+
+                <div class="hero-text-block">
+                    <span class="hero-kicker">Halo,</span>
+                    <h1 class="hero-title">Maniska.</h1>
+                    <p class="hero-paragraph">
+                        Ada beberapa hal sederhana yang ingin aku sampaikan secara tulus ke kamu.
+                    </p>
+                </div>
+
+                <div class="hero-cta-wrap">
+                    <button class="primary-btn" id="btn-start" aria-label="Buka Catatan">
+                        <span>Buka Catatan</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- 2. Slides Screen (Curated Story Chapters) -->
+            <section class="slides-wrapper" style="display: none;">
+                <!-- Minimal Progress Header -->
+                <div class="timeline-deck">
+                    <div class="timeline-track">
+                        <div class="timeline-fill" id="progress-fill"></div>
+                    </div>
+                    <span class="timeline-label" id="step-badge">01 / 06</span>
+                </div>
+
+                <!-- Active Slide View -->
+                <div class="slides-container"></div>
+
+                <!-- Navigation Controls -->
+                <div class="story-navigation">
+                    <button class="icon-nav-btn" id="prev-slide-btn" title="Sebelumnya" disabled>
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <button class="pill-nav-btn" id="ketgeser">
+                        <span>Lanjut</span>
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                    <button class="icon-nav-btn" id="next-slide-btn" title="Selanjutnya">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- 3. Final Question & Invitation Screen -->
+            <section id="bq" class="final-wrapper" style="display: none;">
+                <div class="final-sticker-wrap">
+                    <img src="https://feeldreams.github.io/gumush.gif" id="finalStiker" class="hero-sticker-sm" alt="Gumush Sticker" />
+                </div>
+
+                <div class="quote-paper">
+                    <p id="kalimat" class="typewriter-content"></p>
+                </div>
+
+                <h2 id="pesanAkhir" class="final-headline"></h2>
+
+                <!-- Choice Controls -->
+                <div class="choice-group" id="choice-container">
+                    <button class="choice-btn btn-confirm" id="btn-yes">
+                        Boleh, mau
+                    </button>
+                    <button class="choice-btn btn-decline" id="btn-no">
+                        Belum bisa
+                    </button>
+                </div>
+            </section>
+
+        </article>
+    </main>
+
+    <!-- Clean Aesthetic Modal -->
+    <div class="modal-backdrop" id="ticket-modal" style="display: none;">
+        <div class="modal-sheet">
+            <button class="close-sheet-btn" id="close-ticket-btn" aria-label="Tutup">&times;</button>
+            
+            <div class="modal-sticker-wrap">
+                <img src="https://feeldreams.github.io/pusn.gif" class="hero-sticker-sm" alt="Cute Sticker" />
+            </div>
+
+            <h3 class="modal-title">Terima Kasih, Maniska</h3>
+            <p class="modal-description">
+                Senang mendengarnya. Nanti saat waktu cutiku sudah dekat, kita atur jadwal jalan dan ngobrol bareng ya.
+            </p>
+
+            <div class="modal-actions-row">
+                <button class="modal-primary-btn" id="btn-share-wa">
+                    <i class="fa-brands fa-whatsapp"></i> Balas ke WhatsApp
+                </button>
+                <button class="modal-secondary-btn" id="btn-close-ticket">
+                    Tutup
                 </button>
             </div>
-            <p class="instruction-text">Sentuh LOVEnya!</p>
         </div>
-
-        <!-- 2. Slides Screen (Slideshow is injected here dynamically via script.js) -->
-        <div class="slides-container"></div>
-        <p id="ketgeser" class="hint-text"></p>
-
-        <!-- 3. Final Message Screen (Typewriter layout) -->
-        <blockquote id="bq">
-            <p id="kalimat"></p>
-            <p id="pesanAkhir"></p>
-        </blockquote>
     </div>
 
-    <!-- Hidden Assets Source Container (Kept for compatibility and local script parsing) -->
-    <div style="display: none;">
-        <!-- Sticker Images Collection -->
+    <!-- Hidden Raw Slides Data -->
+    <div id="slide-data-source" style="display: none;">
+        <!-- Sticker Assets -->
         <div class="kumpulanstiker">
             <img src="https://feeldreams.github.io/bunga.gif" id="fotostiker" alt="Bunga" />
             <img src="https://feeldreams.github.io/emawh.gif" id="fotostiker1" alt="Emawh" />
@@ -92,19 +178,47 @@
             <img src="https://feeldreams.github.io/gumush.gif" id="fotostikerA" alt="Gumush" />
         </div>
 
-        <!-- Slide Texts Source -->
+        <!-- 6 Sincere & Elegant Slides -->
         <div id="pergeseran">
-            <p><span>Hi Putri,<br>ada yang mau aku sampein.</span></p>
-            <p><span>Dulu kita sempet kenalan bentar,</span></p>
-            <p><span>terus hilang gitu aja tanpa kabar.</span></p>
-            <p><span>Tapi sekarang kita bisa ngobrol lagi, dan jujur... itu seru.</span></p>
-            <p><span>Aku harap kali ini kita bisa lebih deket.</span></p>
-            <p><span>Mencari bug di dalam codingan,<br>kelupaan titik koma bikin pusing kepala.<br>Kalau database butuh hubungan,<br>boleh gak aku jadi primary key-nya? 💻❤️</span></p>
-            <p><span>Oh iya, satu hal lagi...</span></p>
+            <!-- Slide 0 -->
+            <div data-sticker="fotostiker">
+                <h3 class="slide-heading">Hai Maniska,</h3>
+                <p class="slide-body">Ada beberapa cerita sederhana yang belakangan ini ingin aku sampaikan langsung ke kamu.</p>
+            </div>
+
+            <!-- Slide 1 -->
+            <div data-sticker="fotostiker1">
+                <h3 class="slide-heading">Awal kenal,</h3>
+                <p class="slide-body">Kita sempat ngobrol sebentar, sebelum akhirnya sempat hilang kontak karena kesibukan masing-masing.</p>
+            </div>
+
+            <!-- Slide 2 -->
+            <div data-sticker="fotostiker2">
+                <h3 class="slide-heading">Bisa ngobrol lagi,</h3>
+                <p class="slide-body">Dan jujur... setiap kali bertukar cerita sama kamu, hariku selalu terasa jauh lebih menyenangkan.</p>
+            </div>
+
+            <!-- Slide 3 -->
+            <div data-sticker="fotostiker3">
+                <h3 class="slide-heading">Senang kenal kamu,</h3>
+                <p class="slide-body">Caramu merespon dan bercerita selalu bikin nyaman. Aku berharap komunikasi kita bisa terus terjaga dengan baik.</p>
+            </div>
+
+            <!-- Slide 4 -->
+            <div data-sticker="fotostikerA">
+                <h3 class="slide-heading">Satu hal kecil,</h3>
+                <p class="slide-body">Ada satu hal yang ingin aku tanyakan ke kamu secara langsung...</p>
+            </div>
+
+            <!-- Slide 5 -->
+            <div data-sticker="fotostiker">
+                <h3 class="slide-heading">Ajakan buat kamu,</h3>
+                <p class="slide-body">Klik tombol di bawah ya untuk lanjut membaca pesan terakhirku.</p>
+            </div>
         </div>
     </div>
 
-    <!-- Custom Local Script -->
+    <!-- Custom Script -->
     <script src="script.js"></script>
 </body>
 
