@@ -198,8 +198,8 @@ function startExperience() {
     }, 280);
 }
 
-const finalSweetNote = `Terima kasih banyak ya Maniska sudah meluangkan waktu membaca catatan kecil ini sampai selesai.\n\nAku sangat senang bisa saling kenal dan bertukar kabar sama kamu.`;
-const finalQuestionText = "Kalau nanti waktu cutiku sudah tiba, boleh ya kita jalan dan ngobrol santai bareng? 😊";
+const finalSweetNote = `Maniska, makasih banyak yaa udah hadir dan bikin hari-hariku jadi jauh lebih berwarna.\n\nAku gamau kita cuma sekadar temenan doang... Aku pengen jadi orang spesial yang selalu ada buat kamu.`;
+const finalQuestionText = "Maniska, kamu mau nggak jadi pacar aku? ❤️";
 
 function startFinalSequence() {
     el.slidesWrapper.style.opacity = "0";
@@ -240,14 +240,17 @@ function typewriterLoveMessage() {
 }
 
 // ========================================================
-// 5. POLITE & SUBTLE BUTTON INTERACTION
+// 5. PLAYFUL INTERACTIVE BUTTON DODGE
 // ========================================================
 const dodgeMessages = [
-    "Dipikir-pikir lagi ya...",
-    "Beneran gak mau nih? 🙂",
-    "Pencet yang sebelah kiri aja ya",
-    "Yuk jalan bareng nanti",
-    "Tombol ini pemalu..."
+    "Ih yakin nih gamau? 🥺",
+    "Pencet yang kiri dong pliss 💕",
+    "Jangan ditolak dong Maniskaa 😭",
+    "Pikir-pikir lagi yuk sayang 🥰",
+    "Tombol ini rusak wkwk 😜",
+    "Hatiku cuma buat kamu lho! ❤️",
+    "Nggak boleh nolak pokoknya hehe 😚",
+    "Ayo dong bilang mau ✨"
 ];
 
 function dodgeButton(e) {
@@ -261,7 +264,7 @@ function dodgeButton(e) {
     const cardRect = card.getBoundingClientRect();
     const btnRect = btn.getBoundingClientRect();
 
-    const maxX = (cardRect.width - btnRect.width) * 0.45;
+    const maxX = (cardRect.width - btnRect.width) * 0.42;
     const randomX = (Math.random() - 0.5) * maxX * 1.6;
     const randomY = (Math.random() - 0.5) * 80;
 
@@ -270,23 +273,130 @@ function dodgeButton(e) {
     btn.style.transition = "all 0.22s ease";
 
     btn.innerText = dodgeMessages[appState.dodgeCount % dodgeMessages.length];
+
+    // Every time she dodges, the 'Yes' button grows bigger and more enticing!
+    if (el.btnYes) {
+        const scale = 1 + Math.min(appState.dodgeCount * 0.07, 0.45);
+        el.btnYes.style.transform = `scale(${scale})`;
+    }
 }
 
 function handleYes() {
+    triggerCelebration();
     if (el.ticketModal) {
         el.ticketModal.style.display = "flex";
     }
 }
 
 function shareViaWhatsApp() {
-    const text = encodeURIComponent("Hai! Aku sudah baca catatannya. Boleh, nanti pas kamu cuti kita jalan dan ngobrol santai bareng ya! 😊");
+    const text = encodeURIComponent("Hai! Aku udah baca semuanya di website... Dan jawabanku: Mau kok jadi pacar kamu! Mulai sekarang kita resmi yaa! ❤️🥰");
     window.open(`https://wa.me/6283123826063?text=${text}`, "_blank");
 }
 
 // ========================================================
-// 6. EVENT BINDINGS
+// 6. ROMANTIC CONFETTI & FLOATING HEARTS ENGINE
+// ========================================================
+function initFloatingHearts() {
+    const container = document.getElementById("hearts-bg");
+    if (!container) return;
+
+    const heartSymbols = ["❤️", "💖", "💕", "✨", "🤍", "🌙", "⭐", "🌸"];
+
+    setInterval(() => {
+        if (document.hidden) return;
+        const heart = document.createElement("span");
+        heart.className = "floating-heart";
+        heart.innerText = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+
+        const leftPos = Math.random() * 100;
+        const size = 14 + Math.random() * 18;
+        const duration = 6 + Math.random() * 6;
+
+        heart.style.left = `${leftPos}%`;
+        heart.style.fontSize = `${size}px`;
+        heart.style.animationDuration = `${duration}s`;
+
+        container.appendChild(heart);
+
+        setTimeout(() => {
+            heart.remove();
+        }, duration * 1000);
+    }, 550);
+}
+
+function triggerCelebration() {
+    const canvas = document.getElementById("celebration-canvas");
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+    const colors = ["#ff2a6d", "#ff758f", "#c77dff", "#ffd166", "#00f5d4", "#ff99c8", "#ffffff", "#e02e6c"];
+
+    for (let i = 0; i < 90; i++) {
+        particles.push({
+            x: canvas.width / 2,
+            y: canvas.height / 2,
+            vx: (Math.random() - 0.5) * 16,
+            vy: (Math.random() - 0.7) * 18,
+            size: 6 + Math.random() * 8,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            rotation: Math.random() * 360,
+            rotSpeed: (Math.random() - 0.5) * 10,
+            opacity: 1,
+            isHeart: Math.random() > 0.4
+        });
+    }
+
+    let animationFrame;
+    function render() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let alive = false;
+
+        particles.forEach((p) => {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.35; // gravity
+            p.vx *= 0.98;
+            p.rotation += p.rotSpeed;
+            p.opacity -= 0.009;
+
+            if (p.opacity > 0) {
+                alive = true;
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate((p.rotation * Math.PI) / 180);
+                ctx.globalAlpha = Math.max(0, p.opacity);
+
+                if (p.isHeart) {
+                    ctx.font = `${p.size * 2}px sans-serif`;
+                    ctx.fillText("❤️", -p.size, p.size);
+                } else {
+                    ctx.fillStyle = p.color;
+                    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+                }
+                ctx.restore();
+            }
+        });
+
+        if (alive) {
+            animationFrame = requestAnimationFrame(render);
+        } else {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+    }
+
+    render();
+}
+
+// ========================================================
+// 7. EVENT BINDINGS
 // ========================================================
 function bindEvents() {
+    initFloatingHearts();
+
     if (el.btnStart) el.btnStart.addEventListener("click", startExperience);
     if (el.prevBtn) el.prevBtn.addEventListener("click", prevSlide);
     if (el.nextBtn) el.nextBtn.addEventListener("click", nextSlide);
@@ -308,6 +418,14 @@ function bindEvents() {
         if (el.slidesWrapper && el.slidesWrapper.style.display === "flex") {
             if (e.key === "ArrowRight" || e.key === " ") nextSlide();
             else if (e.key === "ArrowLeft") prevSlide();
+        }
+    });
+
+    window.addEventListener("resize", () => {
+        const canvas = document.getElementById("celebration-canvas");
+        if (canvas) {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
         }
     });
 }

@@ -6,15 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
-    <title>A Note for Maniska</title>
+    <title>Buat Maniska ❤️ | Ada yang Mau Aku Omongin</title>
     <link rel="icon" type="image/x-icon" href="https://malasid.github.io/favicon.png">
-    <meta name="description" content="A curated personal story for Maniska" />
+    <meta name="description" content="Pesan spesial buat Maniska" />
 
     <!-- Modern Typography: Editorial Serif & Clean Sans -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Caveat:wght@600;700&display=swap"
         rel="stylesheet">
 
     <!-- FontAwesome 6 CDN -->
@@ -25,12 +25,16 @@
 </head>
 
 <body>
-    <!-- Subtle Ambient Lighting Mesh -->
+    <!-- Subtle Ambient Lighting Mesh & Floating Hearts -->
     <div class="ambient-layer">
         <div class="glow-orb orb-1"></div>
         <div class="glow-orb orb-2"></div>
         <div class="subtle-grid"></div>
+        <div class="floating-hearts-container" id="hearts-bg"></div>
     </div>
+
+    <!-- Confetti & Celebration Canvas -->
+    <canvas id="celebration-canvas"></canvas>
 
     <!-- Floating Minimalist Audio Bar -->
     <header class="top-nav">
@@ -51,7 +55,7 @@
             </button>
             <div class="song-meta">
                 <span class="song-title">Siapkah Kau 'Tuk Jatuh Cinta Lagi</span>
-                <span class="music-status">Klik untuk memutar</span>
+                <span class="music-status">Klik buat mutar lagu</span>
             </div>
         </div>
     </header>
@@ -62,8 +66,8 @@
             
             <!-- Delicate Top Card Header -->
             <div class="stage-header">
-                <span class="header-tag">Private Note</span>
-                <span class="header-recipient">For Maniska</span>
+                <span class="header-tag"><i class="fa-solid fa-heart"></i> Buat Kamu</span>
+                <span class="header-recipient">Khusus Maniska Cantik ✨</span>
             </div>
 
             <!-- 1. Welcome Screen -->
@@ -73,17 +77,17 @@
                 </div>
 
                 <div class="hero-text-block">
-                    <span class="hero-kicker">Halo,</span>
-                    <h1 class="hero-title">Maniska.</h1>
+                    <span class="hero-kicker">Hai Maniska,</span>
+                    <h1 class="hero-title">Buat Kamu nih.</h1>
                     <p class="hero-paragraph">
-                        Ada beberapa hal sederhana yang ingin aku sampaikan secara tulus ke kamu.
+                        Sebenernya udah dari kemarin aku pengen banget ngomongin satu hal ini ke kamu... Buka dulu yaa! 🙈
                     </p>
                 </div>
 
                 <div class="hero-cta-wrap">
-                    <button class="primary-btn" id="btn-start" aria-label="Buka Catatan">
-                        <span>Buka Catatan</span>
-                        <i class="fa-solid fa-arrow-right"></i>
+                    <button class="primary-btn" id="btn-start" aria-label="Buka Surat Cinta">
+                        <span>Buka Dong</span>
+                        <i class="fa-solid fa-heart"></i>
                     </button>
                 </div>
             </section>
@@ -107,7 +111,7 @@
                         <i class="fa-solid fa-chevron-left"></i>
                     </button>
                     <button class="pill-nav-btn" id="ketgeser">
-                        <span>Lanjut</span>
+                        <span>Lanjut Baca</span>
                         <i class="fa-solid fa-chevron-right"></i>
                     </button>
                     <button class="icon-nav-btn" id="next-slide-btn" title="Selanjutnya">
@@ -116,7 +120,7 @@
                 </div>
             </section>
 
-            <!-- 3. Final Question & Invitation Screen -->
+            <!-- 3. Final Question & Confession Screen -->
             <section id="bq" class="final-wrapper" style="display: none;">
                 <div class="final-sticker-wrap">
                     <img src="https://feeldreams.github.io/gumush.gif" id="finalStiker" class="hero-sticker-sm" alt="Gumush Sticker" />
@@ -131,10 +135,10 @@
                 <!-- Choice Controls -->
                 <div class="choice-group" id="choice-container">
                     <button class="choice-btn btn-confirm" id="btn-yes">
-                        Boleh, mau
+                        <i class="fa-solid fa-heart"></i> Mau Banget! 🥰
                     </button>
                     <button class="choice-btn btn-decline" id="btn-no">
-                        Belum bisa
+                        Gamau wkwk 😜
                     </button>
                 </div>
             </section>
@@ -142,26 +146,30 @@
         </article>
     </main>
 
-    <!-- Clean Aesthetic Modal -->
+    <!-- Clean Aesthetic Modal / Success Confession -->
     <div class="modal-backdrop" id="ticket-modal" style="display: none;">
         <div class="modal-sheet">
             <button class="close-sheet-btn" id="close-ticket-btn" aria-label="Tutup">&times;</button>
             
             <div class="modal-sticker-wrap">
-                <img src="https://feeldreams.github.io/pusn.gif" class="hero-sticker-sm" alt="Cute Sticker" />
+                <img src="https://feeldreams.github.io/pandacoklat.gif" class="hero-sticker-sm" alt="Love Panda" />
             </div>
 
-            <h3 class="modal-title">Terima Kasih, Maniska</h3>
+            <div class="modal-badge-heart">
+                <i class="fa-solid fa-heart"></i> Resmi Pacaran! <i class="fa-solid fa-heart"></i>
+            </div>
+
+            <h3 class="modal-title">Yaaay! Love You Maniska! ❤️</h3>
             <p class="modal-description">
-                Senang mendengarnya. Nanti saat waktu cutiku sudah dekat, kita atur jadwal jalan dan ngobrol bareng ya.
+                Asli seneng bangett! Makasih yaa udah nerima aku. Mulai hari ini kita resmi pacaran! Janji bakal jagain kamu terus dan gaakan bikin kamu nyesel milih aku. Love you so much! 🥰✨
             </p>
 
             <div class="modal-actions-row">
                 <button class="modal-primary-btn" id="btn-share-wa">
-                    <i class="fa-brands fa-whatsapp"></i> Balas ke WhatsApp
+                    <i class="fa-brands fa-whatsapp"></i> Kabarin Aku di WhatsApp Dong 💕
                 </button>
                 <button class="modal-secondary-btn" id="btn-close-ticket">
-                    Tutup
+                    Tutup & Peluk Online 🤗
                 </button>
             </div>
         </div>
@@ -176,44 +184,45 @@
             <img src="https://feeldreams.github.io/pandakuning.gif" id="fotostiker2" alt="Panda Kuning" />
             <img src="https://feeldreams.github.io/pusn.gif" id="fotostiker3" alt="Pusn" />
             <img src="https://feeldreams.github.io/gumush.gif" id="fotostikerA" alt="Gumush" />
+            <img src="https://feeldreams.github.io/pandacoklat.gif" id="fotostikerLove" alt="Love" />
         </div>
 
-        <!-- 6 Sincere & Elegant Slides -->
+        <!-- 6 Casual, Cute & Romantic Love Confession Slides -->
         <div id="pergeseran">
             <!-- Slide 0 -->
             <div data-sticker="fotostiker">
-                <h3 class="slide-heading">Hai Maniska,</h3>
-                <p class="slide-body">Ada beberapa cerita sederhana yang belakangan ini ingin aku sampaikan langsung ke kamu.</p>
+                <h3 class="slide-heading">Hai Maniska! ✨</h3>
+                <p class="slide-body">Jujur aku agak deg-degan nulis ginian hehe, tapi aku pengen jujur sama apa yang lagi aku rasain ke kamu.</p>
             </div>
 
             <!-- Slide 1 -->
             <div data-sticker="fotostiker1">
-                <h3 class="slide-heading">Awal kenal,</h3>
-                <p class="slide-body">Kita sempat ngobrol sebentar, sebelum akhirnya sempat hilang kontak karena kesibukan masing-masing.</p>
+                <h3 class="slide-heading">Semenjak Ada Kamu,</h3>
+                <p class="slide-body">Hari-hariku rasanya jadi jauh lebih seru. Tiap kali dapet chat atau ngobrol sama kamu tuh bawaannya selalu bikin senyum-senyum sendiri.</p>
             </div>
 
             <!-- Slide 2 -->
             <div data-sticker="fotostiker2">
-                <h3 class="slide-heading">Bisa ngobrol lagi,</h3>
-                <p class="slide-body">Dan jujur... setiap kali bertukar cerita sama kamu, hariku selalu terasa jauh lebih menyenangkan.</p>
+                <h3 class="slide-heading">Bukan Cuma Nyaman Biasa,</h3>
+                <p class="slide-body">Awalnya aku mikir kita cuma temenan asik aja. Tapi makin ke sini, aku baru sadar... ternyata rasa ini beda, aku udah beneran sayang sama kamu.</p>
             </div>
 
             <!-- Slide 3 -->
             <div data-sticker="fotostiker3">
-                <h3 class="slide-heading">Senang kenal kamu,</h3>
-                <p class="slide-body">Caramu merespon dan bercerita selalu bikin nyaman. Aku berharap komunikasi kita bisa terus terjaga dengan baik.</p>
+                <h3 class="slide-heading">Kamu Tuh Spesial Banget,</h3>
+                <p class="slide-body">Caramu ngobrol, ketawa kamu yang lucu, sampe perhatian-perhatian kecilmu... Semuanya selalu berhasil bikin aku ngerasa beruntung banget bisa kenal kamu.</p>
             </div>
 
             <!-- Slide 4 -->
             <div data-sticker="fotostikerA">
-                <h3 class="slide-heading">Satu hal kecil,</h3>
-                <p class="slide-body">Ada satu hal yang ingin aku tanyakan ke kamu secara langsung...</p>
+                <h3 class="slide-heading">Pengen Selalu Ada Buat Kamu,</h3>
+                <p class="slide-body">Aku pengen terus nemenin hari-hari kamu. Jadi orang pertama yang kamu cari pas lagi seneng, dan tempat kamu bersandar pas lagi cape.</p>
             </div>
 
             <!-- Slide 5 -->
-            <div data-sticker="fotostiker">
-                <h3 class="slide-heading">Ajakan buat kamu,</h3>
-                <p class="slide-body">Klik tombol di bawah ya untuk lanjut membaca pesan terakhirku.</p>
+            <div data-sticker="fotostikerLove">
+                <h3 class="slide-heading">Satu Hal yang Bikin Deg-degan...</h3>
+                <p class="slide-body">Nah, mumpung hari ini, aku mau beraniin diri buat nanya langsung ke kamu. Pencet tombol di bawah yaa... 🫣❤️</p>
             </div>
         </div>
     </div>
